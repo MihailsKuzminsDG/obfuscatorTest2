@@ -29,9 +29,9 @@
 		<ProjectReference Include="..\Dayton.Sender.Sx.Abstractions\Dayton.Sender.Sx.Abstractions.csproj" />
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="powershell -NoProfile -ExecutionPolicy RemoteSigned -file &quot;$(SolutionDir).build\add_obfuscated_references.ps1&quot; -targetPath &quot;$(TargetPath)&quot; -configuration $(Configuration) -projectNames Dayton.Connection.Sx" />
-	</Target>
+	</Target>-->
 
 	<Target Name="SetupObfuscate" BeforeTargets="Obfuscate">
 		<PropertyGroup>
@@ -64,6 +64,10 @@
 			<DebuggingProtection>true</DebuggingProtection>
 		</PropertyGroup>
 	</Target>
+
+	<ItemGroup>
+		<MapInFile Include="..\Dayton.Connection.Sx\bin\$(Configuration)\$(TargetFramework)\Dayton.Connection.Sx.dll.map.xml" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Remove="*.csproj.DotSettings" />

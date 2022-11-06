@@ -68,6 +68,10 @@
 	</Target>
 
 	<ItemGroup>
+		<MapInFile Include="..\Dayton.Connection.Sx.Abstractions\bin\$(Configuration)\$(TargetFramework)\Dayton.Connection.Sx.Abstractions.dll.map.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Remove="*.csproj.DotSettings" />
 	</ItemGroup>
 

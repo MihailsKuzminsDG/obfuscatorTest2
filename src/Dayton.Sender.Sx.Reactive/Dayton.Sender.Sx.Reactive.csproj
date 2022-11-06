@@ -39,19 +39,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<MapInFile Include="..\Dayton.Sender.Sx\bin\$(Configuration)\$(TargetFramework)\Dayton.Sender.Sx.dll.map.xml" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\Dayton.Connection.Sx\Dayton.Connection.Sx.csproj" />
 		<ProjectReference Include="..\Dayton.Sender.Sx.Abstractions\Dayton.Sender.Sx.Abstractions.csproj" PrivateAssets="All" />
 		<ProjectReference Include="..\Dayton.Sender.Sx.Reactive.Abstractions\Dayton.Sender.Sx.Reactive.Abstractions.csproj" />
 		<ProjectReference Include="..\Dayton.Sender.Sx\Dayton.Sender.Sx.csproj" PrivateAssets="All" />
 	</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="powershell -NoProfile -ExecutionPolicy RemoteSigned -file &quot;$(SolutionDir).build\add_obfuscated_references.ps1&quot; -targetPath &quot;$(TargetPath)&quot; -configuration $(Configuration) -projectNames &quot;Dayton.Sender.Sx&quot;" />
-	</Target>
+	</Target>-->
 
 	<Target Name="SetupObfuscate" BeforeTargets="Obfuscate">
 		<PropertyGroup>
@@ -85,6 +81,12 @@
 			<VerboseLevel>5</VerboseLevel>
 		</PropertyGroup>
 	</Target>
+
+	<ItemGroup>
+		<MapInFile Include="..\Dayton.Connection.Sx\bin\$(Configuration)\$(TargetFramework)\Dayton.Connection.Sx.dll.map.xml" />
+		<MapInFile Include="..\Dayton.Sender.Sx\bin\$(Configuration)\$(TargetFramework)\Dayton.Sender.Sx.dll.map.xml" />
+		<MapInFile Include="..\Dayton.Sender.Sx.Reactive.Abstractions\bin\$(Configuration)\$(TargetFramework)\Dayton.Sender.Sx.Reactive.Abstractions.dll.map.xml" />
+	</ItemGroup>
 
 	<!-- Needed to pack the referenced projects -->
 	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences" Condition="'$(Configuration)'=='RELEASE'">
