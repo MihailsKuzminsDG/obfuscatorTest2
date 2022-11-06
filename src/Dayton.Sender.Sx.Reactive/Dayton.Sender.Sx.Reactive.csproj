@@ -1,0 +1,113 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Dayton.Connection.Sx</RootNamespace>
+		<PackageId>Dayton.SxSender.Reactive</PackageId>
+		<Version>2.4.2</Version>
+		<Authors>Dayton SIA</Authors>
+		<Product>SX connection</Product>
+		<Description>Store SX commands in the database and send them to scales with notification from the reactive pipeline (IObservable)</Description>
+		<Copyright>© Dayton SIA 2022</Copyright>
+		<PackageIcon>favico.png</PackageIcon>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='RELEASE'">
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+		<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="IPAddressRange" Version="4.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Open.ChannelExtensions" Version="6.2.2" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.4" />
+		<PackageReference Include="System.Reactive" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Babel.Obfuscator" Version="9.9.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<MapInFile Include="..\Dayton.Sender.Sx\bin\$(Configuration)\$(TargetFramework)\Dayton.Sender.Sx.dll.map.xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dayton.Connection.Sx\Dayton.Connection.Sx.csproj" />
+		<ProjectReference Include="..\Dayton.Sender.Sx.Abstractions\Dayton.Sender.Sx.Abstractions.csproj" PrivateAssets="All" />
+		<ProjectReference Include="..\Dayton.Sender.Sx.Reactive.Abstractions\Dayton.Sender.Sx.Reactive.Abstractions.csproj" />
+		<ProjectReference Include="..\Dayton.Sender.Sx\Dayton.Sender.Sx.csproj" PrivateAssets="All" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="powershell -NoProfile -ExecutionPolicy RemoteSigned -file &quot;$(SolutionDir).build\add_obfuscated_references.ps1&quot; -targetPath &quot;$(TargetPath)&quot; -configuration $(Configuration) -projectNames &quot;Dayton.Sender.Sx&quot;" />
+	</Target>
+
+	<Target Name="SetupObfuscate" BeforeTargets="Obfuscate">
+		<PropertyGroup>
+			<!-- Output -->
+			<GenerateMapOutFile>true</GenerateMapOutFile>
+			<!-- Renaming -->
+			<ObfuscateTypes>true</ObfuscateTypes>
+			<ObfuscateMethods>true</ObfuscateMethods>
+			<ObfuscateProperties>true</ObfuscateProperties>
+			<ObfuscateEvents>true</ObfuscateEvents>
+			<ObfuscateParameters>true</ObfuscateParameters>
+			<ObfuscateFields>true</ObfuscateFields>
+			<ObfuscateFields>true</ObfuscateFields>
+			<VirtualFunctions>true</VirtualFunctions>
+			<OverloadedRenaming>false</OverloadedRenaming>
+			<NameLength>3</NameLength>
+			<FlattenNamespaces>true</FlattenNamespaces>
+			<UnicodeNormalization>false</UnicodeNormalization>
+			<!-- Control flow -->
+			<ControlFlowObfuscation>
+				true;token=false;underflow=false;goto=true;if=true;switch=true;case=true;call=true;value=true
+			</ControlFlowObfuscation>
+			<!-- Encryption -->
+			<StringEncryption>hash</StringEncryption>
+			<Valueencryption>
+				true;int32=true;int64=true;single=true;double=true;array=true
+			</Valueencryption>
+			<!-- Protection -->
+			<SuppressIldasm>true</SuppressIldasm>
+			<DebuggingProtection>true</DebuggingProtection>
+			<VerboseLevel>5</VerboseLevel>
+		</PropertyGroup>
+	</Target>
+
+	<!-- Needed to pack the referenced projects -->
+	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences" Condition="'$(Configuration)'=='RELEASE'">
+		<ItemGroup>
+			<_ReferenceCopyLocalPaths Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
+		</ItemGroup>
+
+		<Message Text="Batch for .nupkg: ReferenceCopyLocalPaths = @(_ReferenceCopyLocalPaths), ReferenceCopyLocalPaths.DestinationSubDirectory = %(_ReferenceCopyLocalPaths.DestinationSubDirectory) Filename = %(_ReferenceCopyLocalPaths.Filename) Extension = %(_ReferenceCopyLocalPaths.Extension)" Importance="High" Condition="'@(_ReferenceCopyLocalPaths)' != ''" />
+
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(_ReferenceCopyLocalPaths)" TargetPath="%(_ReferenceCopyLocalPaths.DestinationSubDirectory)" />
+		</ItemGroup>
+	</Target>
+
+	<ItemGroup>
+		<None Remove="*.csproj.DotSettings" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\favico.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>

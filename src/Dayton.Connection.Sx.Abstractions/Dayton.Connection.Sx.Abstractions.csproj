@@ -1,0 +1,73 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Dayton.Connection.Sx</RootNamespace>
+		<PackageId>Dayton.SxConnection.Abstractions</PackageId>
+		<Version>2.4.2</Version>
+		<Authors>Dayton SIA</Authors>
+		<Product>SX connection</Product>
+		<Description>Abstract types for Dayton.SxConnection</Description>
+		<Copyright>© Dayton SIA 2022</Copyright>
+		<PackageIcon>favico.png</PackageIcon>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='RELEASE'">true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Babel.Obfuscator" Version="9.9.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<Target Name="SetupObfuscate" BeforeTargets="Obfuscate">
+		<PropertyGroup>
+			<!-- Output -->
+			<GenerateMapOutFile>true</GenerateMapOutFile>
+			<!-- Renaming -->
+			<ObfuscateTypes>true</ObfuscateTypes>
+			<ObfuscateMethods>true</ObfuscateMethods>
+			<ObfuscateProperties>true</ObfuscateProperties>
+			<ObfuscateEvents>true</ObfuscateEvents>
+			<ObfuscateParameters>true</ObfuscateParameters>
+			<ObfuscateFields>true</ObfuscateFields>
+			<ObfuscateFields>true</ObfuscateFields>
+			<VirtualFunctions>true</VirtualFunctions>
+			<OverloadedRenaming>false</OverloadedRenaming>
+			<NameLength>3</NameLength>
+			<FlattenNamespaces>true</FlattenNamespaces>
+			<UnicodeNormalization>false</UnicodeNormalization>
+			<!-- Control flow -->
+			<ControlFlowObfuscation>
+				true;token=false;underflow=false;goto=true;if=true;switch=true;case=true;call=true;value=true
+			</ControlFlowObfuscation>
+			<!-- Encryption -->
+			<StringEncryption>hash</StringEncryption>
+			<Valueencryption>
+				true;int32=true;int64=true;single=true;double=true;array=true
+			</Valueencryption>
+			<!-- Protection -->
+			<SuppressIldasm>true</SuppressIldasm>
+			<DebuggingProtection>true</DebuggingProtection>
+		</PropertyGroup>
+	</Target>
+
+	<ItemGroup>
+		<None Remove="*.csproj.DotSettings" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\favico.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>

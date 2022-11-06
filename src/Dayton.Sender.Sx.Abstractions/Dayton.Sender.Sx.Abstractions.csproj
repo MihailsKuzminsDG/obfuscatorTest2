@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Dayton.Connection.Sx</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dayton.Connection.Sx.Abstractions\Dayton.Connection.Sx.Abstractions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="*.csproj.DotSettings" />
+	</ItemGroup>
+
+</Project>

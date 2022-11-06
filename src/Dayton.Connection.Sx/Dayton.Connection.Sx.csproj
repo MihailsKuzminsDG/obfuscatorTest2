@@ -1,0 +1,81 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<PackageId>Dayton.SxConnection</PackageId>
+		<Version>2.4.2</Version>
+		<Authors>Dayton SIA</Authors>
+		<Product>SX connection</Product>
+		<Description>Communicate with retail scales</Description>
+		<Copyright>© Dayton SIA 2022</Copyright>
+		<PackageIcon>favico.png</PackageIcon>
+		<GeneratePackageOnBuild Condition="'$(Configuration)'=='RELEASE'">true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentFTP" Version="42.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+		<PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.10" />
+		<PackageReference Include="MyNihongo.Option" Version="2.1.0" />
+		<PackageReference Include="System.Text.Json" Version="7.0.0-rc.2.22472.3" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Babel.Obfuscator" Version="9.9.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dayton.Connection.Sx.Abstractions\Dayton.Connection.Sx.Abstractions.csproj" />
+	</ItemGroup>
+
+	<Target Name="SetupObfuscate" BeforeTargets="Obfuscate">
+		<PropertyGroup>
+			<!-- Output -->
+			<GenerateMapOutFile>true</GenerateMapOutFile>
+			<!-- Renaming -->
+			<ObfuscateTypes>true</ObfuscateTypes>
+			<ObfuscateMethods>true</ObfuscateMethods>
+			<ObfuscateProperties>true</ObfuscateProperties>
+			<ObfuscateEvents>true</ObfuscateEvents>
+			<ObfuscateParameters>true</ObfuscateParameters>
+			<ObfuscateFields>true</ObfuscateFields>
+			<ObfuscateFields>true</ObfuscateFields>
+			<VirtualFunctions>true</VirtualFunctions>
+			<OverloadedRenaming>false</OverloadedRenaming>
+			<NameLength>3</NameLength>
+			<FlattenNamespaces>true</FlattenNamespaces>
+			<UnicodeNormalization>false</UnicodeNormalization>
+			<!-- Control flow -->
+			<ControlFlowObfuscation>
+				true;token=false;underflow=false;goto=true;if=true;switch=true;case=true;call=true;value=true
+			</ControlFlowObfuscation>
+			<!-- Encryption -->
+			<StringEncryption>hash</StringEncryption>
+			<Valueencryption>
+				true;int32=true;int64=true;single=true;double=true;array=true
+			</Valueencryption>
+			<!-- Protection -->
+			<SuppressIldasm>true</SuppressIldasm>
+			<DebuggingProtection>true</DebuggingProtection>
+		</PropertyGroup>
+	</Target>
+
+	<ItemGroup>
+		<None Remove="*.csproj.DotSettings" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\favico.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+</Project>

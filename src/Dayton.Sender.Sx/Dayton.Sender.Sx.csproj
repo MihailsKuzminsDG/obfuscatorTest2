@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>Dayton.Connection.Sx</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="IPAddressRange" Version="4.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Open.ChannelExtensions" Version="6.2.2" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Babel.Obfuscator" Version="9.9.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Dayton.Connection.Sx\Dayton.Connection.Sx.csproj" />
+		<ProjectReference Include="..\Dayton.Sender.Sx.Abstractions\Dayton.Sender.Sx.Abstractions.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="powershell -NoProfile -ExecutionPolicy RemoteSigned -file &quot;$(SolutionDir).build\add_obfuscated_references.ps1&quot; -targetPath &quot;$(TargetPath)&quot; -configuration $(Configuration) -projectNames Dayton.Connection.Sx" />
+	</Target>
+
+	<Target Name="SetupObfuscate" BeforeTargets="Obfuscate">
+		<PropertyGroup>
+			<!-- Output -->
+			<GenerateMapOutFile>true</GenerateMapOutFile>
+			<!-- Renaming -->
+			<ObfuscateTypes>true</ObfuscateTypes>
+			<ObfuscateMethods>true</ObfuscateMethods>
+			<ObfuscateProperties>true</ObfuscateProperties>
+			<ObfuscateEvents>true</ObfuscateEvents>
+			<ObfuscateParameters>true</ObfuscateParameters>
+			<ObfuscateFields>true</ObfuscateFields>
+			<ObfuscateFields>true</ObfuscateFields>
+			<VirtualFunctions>true</VirtualFunctions>
+			<OverloadedRenaming>false</OverloadedRenaming>
+			<NameLength>3</NameLength>
+			<FlattenNamespaces>true</FlattenNamespaces>
+			<UnicodeNormalization>false</UnicodeNormalization>
+			<!-- Control flow -->
+			<ControlFlowObfuscation>
+				true;token=false;underflow=false;goto=true;if=true;switch=true;case=true;call=true;value=true
+			</ControlFlowObfuscation>
+			<!-- Encryption -->
+			<StringEncryption>hash</StringEncryption>
+			<Valueencryption>
+				true;int32=true;int64=true;single=true;double=true;array=true
+			</Valueencryption>
+			<!-- Protection -->
+			<SuppressIldasm>true</SuppressIldasm>
+			<DebuggingProtection>true</DebuggingProtection>
+		</PropertyGroup>
+	</Target>
+
+	<ItemGroup>
+		<None Remove="*.csproj.DotSettings" />
+	</ItemGroup>
+
+</Project>

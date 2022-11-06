@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rules>
+	<Rule name="rule1" feature="default" exclude="true">
+		<Pattern isRegEx="true"><![CDATA[
+		\<.*\>\$
+		]]></Pattern>
+	</Rule>
+</Rules>
